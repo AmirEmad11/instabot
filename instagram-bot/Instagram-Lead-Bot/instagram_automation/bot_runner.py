@@ -705,9 +705,13 @@ class BotRunner:
                 logger.info("🛑 تم إيقاف البوت")
 
         except RuntimeError as e:
-            logger.critical(f"❌ خطأ حرج: {e}\n{traceback.format_exc()}")
+            err_msg = f"❌ خطأ حرج: {e}\n{traceback.format_exc()}"
+            logger.critical(err_msg)
+            print(f"[BOT ERROR] {err_msg}", flush=True)
         except Exception as e:
-            logger.error(f"❌ خطأ غير متوقع: {e}\n{traceback.format_exc()}")
+            err_msg = f"❌ خطأ غير متوقع: {e}\n{traceback.format_exc()}"
+            logger.error(err_msg)
+            print(f"[BOT ERROR] {err_msg}", flush=True)
             if self.session_manager.page:
                 try:
                     await take_error_screenshot(self.session_manager.page, "critical_error")
