@@ -1,0 +1,120 @@
+# ══════════════════════════════════════════════════════════════════
+#  Instagram Lead Bot — docker-compose.yml
+#
+#  قبل التشغيل: انسخ .env.example → .env وعدّل البيانات
+#
+#  الأوامر الأساسية (أو استخدم manage.sh):
+#    docker compose up -d --build   ← بناء وتشغيل
+#    docker compose logs -f web     ← سجل مباشر
+#    docker compose down            ← إيقاف
+#    docker compose run --rm bot    ← تشغيل main.py يدوياً
+# ══════════════════════════════════════════════════════════════════
+
+version: "3.9"
+
+networks:
+  instanet:
+    driver: bridge
+
+services:
+
+  # ════════════════════════════════════════════════════════════════
+  #  web — واجهة Streamlit الرئيسية (SaaS Panel)
+  #  يعمل دايماً في الخلفية ويعيد تشغيل نفسه تلقائياً
+  # ════════════════════════════════════════════════════════════════
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: instabot:latest
+    container_name: instabot_web
+    restart: always
+
+    command: >
+      streamlit run instagram_automation/streamlit_app.py
+        --server.port 8081
+        --server.address 0.0.0.0
+        --server.headless true
+        --browser.gatherUsageStats false
+
+    ports:
+      - "${PORT:-8081}:8081"
+
+    # ── تحميل متغيرات البيئة من ملف .env ──
+    env_file:
+      - .env
+
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PLAYWRIGHT_BROWSERS_PATH=/home/botuser/.playwright
+      - STREAMLIT_SERVER_HEADLESS=true
+      - STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
+
+    # ── Volumes مشتركة (bind mounts → يسهل الـ backup) ──
+    volumes:
+      # قاعدة بيانات المستخدمين والعملاء (مشتركة مع bot)
+      - ./data/db:/app/instagram_automation/data_override
+      # ← سشنات Instagram لكل مستخدم (مشتركة مع bot)
+      - ./data/sessions:/app/instagram_automation/sessions
+      # لقطات الشاشة عند الأخطاء
+      - ./data/screenshots:/app/instagram_automation/screenshots
+      # ملفات السجل
+      - ./data/logs:/var/log/instabot
+
+    networks:
+      - instanet
+
+    # ── فحص الصحة كل 30 ثانية ──
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 25s
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "7"
+
+  # ════════════════════════════════════════════════════════════════
+  #  bot — تشغيل main.py (automation one-shot)
+  #  يشارك نفس السشنات مع web → يستخدم جلسة تسجيل الدخول
+  #  شغّله يدوياً:  docker compose run --rm bot
+  #  أو:            ./manage.sh run-bot
+  # ════════════════════════════════════════════════════════════════
+  bot:
+    image: instabot:latest
+    container_name: instabot_runner
+    depends_on:
+      web:
+        condition: service_healthy
+
+    command: python instagram_automation/main.py
+
+    env_file:
+      - .env
+
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PLAYWRIGHT_BROWSERS_PATH=/home/botuser/.playwright
+
+    # ← نفس الـ volumes بالضبط عشان يشوف السشنات اللي عملها web
+    volumes:
+      - ./data/db:/app/instagram_automation/data_override
+      - ./data/sessions:/app/instagram_automation/sessions
+      - ./data/screenshots:/app/instagram_automation/screenshots
+      - ./data/logs:/var/log/instabot
+
+    networks:
+      - instanet
+
+    # يعيد التشغيل فقط عند الفشل (مش دايماً)
+    restart: on-failure
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

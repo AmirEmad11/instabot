@@ -1,0 +1,9 @@
+Improve bot's login security and comment extraction accuracy
+
+Enhance login verification to use actual UI elements, exclude post authors from comment scraping, and introduce optional auto-replies for public accounts.
+
+Replit-Commit-Author: Agent
+Replit-Commit-Session-Id: f95dc4a1-b98b-41e6-b55b-7e9bc3fb2141
+Replit-Commit-Checkpoint-Type: full_checkpoint
+Replit-Commit-Event-Id: 729e46a6-bd67-40b5-a296-7956a818f74d
+Replit-Helium-Checkpoint-Created: true

@@ -1,0 +1,9 @@
+Add session injection and debug screenshots to improve login reliability
+
+Update session manager to prioritize saved cookies for login, inject a realistic User-Agent, and implement graceful selector waiting. Modify Streamlit app to add a UI for session cookie injection and display debug screenshots directly in the interface.
+
+Replit-Commit-Author: Agent
+Replit-Commit-Session-Id: 87eaf936-502a-4c66-aec4-fd3fbc1f06d3
+Replit-Commit-Checkpoint-Type: full_checkpoint
+Replit-Commit-Event-Id: 29274525-d4ae-4a0e-9493-d6b2c11880a4
+Replit-Helium-Checkpoint-Created: true

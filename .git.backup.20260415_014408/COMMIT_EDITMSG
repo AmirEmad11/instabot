@@ -1,0 +1,10 @@
+Improve user interface and refine search logic for the Instagram bot
+
+Enhance UI with tabs for settings, bot control, and results. Implement auto-saving text areas for reply messages and keywords. Expand keyword list with fuzzy matching in `lead_scraper.py` and `utils.py`. Optimize scrolling and batch comment fetching in `lead_scraper.py`. Add progress bar to `streamlit_app.py` to show comments checked and leads found. Update `bot_runner.py` and `automation_engine.py` to integrate new settings and features.
+
+Replit-Commit-Author: Agent
+Replit-Commit-Session-Id: 4500641b-fa0d-4cfb-a120-5b04eaae58fa
+Replit-Commit-Checkpoint-Type: full_checkpoint
+Replit-Commit-Event-Id: eb4ec8e5-163b-4836-92c4-d638d4fef08d
+Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-production-us-central1/4ba032f5-3079-4374-8a74-5705c7b63749/4500641b-fa0d-4cfb-a120-5b04eaae58fa/4XhnVke
+Replit-Helium-Checkpoint-Created: true

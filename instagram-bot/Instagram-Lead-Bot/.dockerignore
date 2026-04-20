@@ -1,0 +1,40 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+
+# بيانات حساسة — لا تدخل الصورة أبداً
+.env
+.env.*
+
+# ملفات سجل وقواعد بيانات محلية (محفوظة في volumes)
+*.log
+*.db
+data/
+
+# ملفات السشن والصور المحلية
+instagram_automation/sessions/
+instagram_automation/screenshots/
+instagram_automation/session_state.json
+
+# ملفات تطوير وإدارة
+.git/
+.gitignore
+*.md
+manage.sh
+vps_deploy.sh
+instabot.service
+docker-compose.yml
+docker-compose.*.yml
+
+# بيئات Python المحلية
+.venv/
+venv/
+__pycache__/
+
+# ملفات Replit
+.replit
+replit.nix
+.upm/
+node_modules/
